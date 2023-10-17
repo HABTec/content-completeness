@@ -1,0 +1,21 @@
+{
+    "version": "0.1",
+    "name": "Content Completeness",
+    "description": "Data element level content completeness reporting app",
+    "launch_path": "index.html",
+    "icons": {
+        "48": "img/dhis-web-content-completeness.png"
+    },
+    "appType": "APP",
+    "short_name": "content-completeness",
+    "developer": {
+        "name": "HABTech",
+        "url": "https://habtechsolution.com"
+    },
+    "default_locale": "en",
+    "activities": {
+        "dhis": {
+            "href": ".."
+        }
+    }
+}

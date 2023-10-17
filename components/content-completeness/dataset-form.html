@@ -1,0 +1,152 @@
+<div class="row hideInPrint vertical-spacing">
+    <form class="form-horizontal" role="form" name="reportForm" novalidate>
+        <div class="panel report-panel-color">
+            <div class="panel-heading mouse-pointer" ng-click="model.showReportFilters = !model.showReportFilters">
+                {{'report_filters'| translate}}
+                <div class="pull-right">
+                    <a class="small-horizontal-spacing" href ng-click="model.showReportFilters = !model.showReportFilters; $event.stopPropagation();">
+                        <span ng-show="model.showReportFilters" class="white-color"><i class="fa fa-chevron-up vertical-center" title="{{'collapse'| translate}}"></i></span>
+                        <span ng-show="!model.showReportFilters" class="white-color"><i class="fa fa-chevron-down vertical-center" title="{{'expand'| translate}}"></i></span>
+                    </a>
+                </div>
+            </div>
+            <div ng-show="model.showReportFilters" class="panel panel-body selectionArea-no-radius remove-bottom-margin">
+                <div class="col-sm-6 bordered-div">
+                    <!--<span class="bold">{{'main_filters'| translate}}</span>
+                    <hr>-->
+                    <div class="row small-vertical-spacing">
+                        <div class="col-sm-3">
+                            {{'data_set'| translate}}
+                        </div>
+                        <div class="col-sm-9">
+                            <ui-select ng-model="model.selectedDataSet"
+                                       theme="select2"
+                                       style="width:100%;">
+                                <ui-select-match allow-clear="true" class="form-control-ui-select" placeholder="{{model.dataSets && model.dataSets.length > 0 ? 'select_or_search' : 'empty'| translate}}">{{$select.selected.displayName|| $select.selected}}</ui-select-match>
+                                <ui-select-choices repeat="dataSet in model.dataSets | filter: $select.search | limitTo:maxOptionSize">
+                                    <span ng-bind-html="dataSet.displayName | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    
+                    <div class="row small-vertical-spacing" ng-if="model.selectedDataSet && model.selectedPeriodType">
+                        <div class="col-sm-12">
+                            <d2-multi-select
+                                ng-model="model.selectedPeriods"
+                                available="model.periods"
+                                available-label="{{'available_periods'| translate}}"
+                                selected-label="{{'selected_periods'| translate}}"
+                                display-attr="name">
+                            </d2-multi-select>
+                        </div>
+                        <div class="small-vertical-spacing">
+                            <div class="col-sm-6">
+                                <div class="pull-left">
+                                    <button type="button"
+                                            class="btn btn-default"
+                                            ng-click="getPeriods('PRV')"
+                                            title="{{'previous_periods'| translate}}">
+                                        {{'previous_year'| translate}}
+                                    </button>
+
+                                    <button type="button"
+                                            class="btn btn-default"
+                                            ng-disabled="periodOffset > -1"
+                                            ng-click="getPeriods('NXT')"
+                                            title="{{'next_periods'| translate}}">
+                                        {{'next_year'| translate}}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 bordered-div">
+                    <div class="row small-vertical-spacing">
+                        <div class="col-sm-3">
+                            {{'include_children'| translate}}
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="checkbox"
+                                   class="form-control-checkbox"
+                                   name="foo"
+                                   ng-model="model.includeChildren">
+                        </div>
+                    </div>
+
+                    <div class="row small-vertical-spacing" ng-if="model.selectedDataSet && model.selectedPeriods.length > 0">
+                        <div class="col-sm-12">
+                            <button type="button"
+                                    class="btn btn-primary pull-right"
+                                    ng-click="generateReport()">
+                                {{'generate_report'| translate}}
+                            </button>
+                        </div>
+                    </div>
+                    <!--<span class="bold">{{'additional_filters'| translate}}</span>
+                    <div ng-repeat="cogs in model.categoryOptionGroupSets" ng-if="model.categoryOptionGroupSets.length > 0">
+                        <div class="row small-vertical-spacing">
+                            <div class="col-sm-3">
+                                {{cogs.displayName}}
+                            </div>
+                            <div class="col-sm-9">
+                                <ui-select multiple
+                                           ng-model="cogs.selectedOptions"
+                                           style="width:100%;">
+                                    <ui-select-match placeholder="{{'all'| translate}}">{{$item.displayName}}</ui-select-match>
+                                    <ui-select-choices  repeat="option as option in cogs.categoryOptionGroups | filter: $select.search | limitTo:maxOptionSize">
+                                        <span ng-bind-html="option.displayName | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-include="'views/ougs-filter.html'"></div>-->
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- selection ends -->
+
+<!-- report progress indicator begins -->
+<div class="row alert alert-info" ng-if="model.reportStarted && !model.reportReady">
+    {{'generating_report'| translate}}
+    <span class="small-horizontal-spacing"><i class="fa fa-spinner fa-spin fa-2x"></i></span>
+</div>
+<!-- report progress indicator ends -->
+
+<!-- report begins -->
+<div class="row" ng-if="model.reportReady">
+    <table class="col-sm-12 table table-bordered table-striped table-responsive" ng-if="selectedOrgUnits.length > 0">
+        <thead>
+            <tr>
+                <th class="pull-center vertical-center" colspan="{{model.headers.length}}">{{model.selectedDataSet.displayName}}</th>
+            </tr>
+            <tr>
+                <th></th>
+                <th class="pull-center vertical-center" colspan="{{model.headers.length-1}}">{{'content_completeness_rate_percent' | translate}}</th>
+            </tr>
+            <tr>
+                <th class="vertical-center cursor-pointer" ng-repeat="header in model.headers">
+                    <span ng-attr-title="{{'sort' | translate}}"  ng-click="setSortHeader(header)">
+                        {{header.name}}
+                        <span class="fa-stack hideInPrint">
+                            <span ng-class="{true: 'alert-danger'} [model.sortHeader.id === header.id && !model.sortHeader.reverse]"><i class="fa fa-sort-asc fa-stack-1x"></i></span>
+                            <span ng-class="{true: 'alert-danger'} [model.sortHeader.id === header.id && model.sortHeader.reverse]"><i class="fa fa-sort-desc fa-stack-1x"></i></span>
+                        </span>
+                    </span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="dv in model.dataValues | orderBy: model.sortHeader.id : model.sortHeader.reverse">
+                <td class="vertical-center" ng-repeat="header in model.headers">
+                    {{dv[header.id]}}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<!-- report ends -->

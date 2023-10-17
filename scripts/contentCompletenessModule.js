@@ -1,0 +1,19 @@
+export default angular.module('contentCompleteness', [
+    'ui.bootstrap',
+    'ngRoute',
+    'ngCookies',
+    'ngSanitize',
+    'ngMessages',
+    'contentCompletenessServices',
+    'contentCompletenessFilters',
+    'contentCompletenessDirectives',
+    'contentCompletenessControllers',
+    'd2Directives',
+    'd2Filters',
+    'd2Services',
+    'd2Controllers',
+    'angularLocalStorage',
+    'ui.select',
+    'ui.select2',
+    'pascalprecht.translate'
+]);

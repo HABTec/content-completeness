@@ -1,5 +1,7 @@
 # content-completeness
-DHIS2 data element based content completeness reporting app
+DHIS2 data element based content completeness reporting app. 
+
+DHIS2's core functionality supports for generating data set report completeness. However, data set completeness doesn't tell content wise completeness, it only tells whether a "complete" button is clicked or not. This provides a wrong sense of "we have reported completed". With the content completeness app, we evaluate how many of the data elements from the data set have value entered for them.
 
 ## Contribute
 

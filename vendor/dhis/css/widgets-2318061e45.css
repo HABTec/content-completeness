@@ -202,6 +202,7 @@ div.thingy
   font-weight: bold;
   font-size: 9pt;
   cursor: pointer;
+  z-index: 100;
 }
 
 #mainMenuIcon
